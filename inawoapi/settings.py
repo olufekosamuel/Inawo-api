@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os, datetime
+import django_heroku
 
 from whitenoise.django import DjangoWhiteNoise
 from django.core.wsgi import get_wsgi_applications
