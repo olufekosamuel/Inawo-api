@@ -267,9 +267,8 @@ def ListTransaction(request, account_id):
         account = Account.objects.get(id=account_id)
         transaction = Transaction.objects.filter(user=request.user, account=account)
 
-        transaction = serialize('json', transaction)
-        transaction = json.loads(transaction)
-        return JsonResponse({'transaction':transaction,'error':False,'status':status.HTTP_200_OK}, status=status.HTTP_200_OK)
+        transaction = TransactionSerializer(transaction,many=True)
+        return JsonResponse({'transaction':transaction.data,'error':False,'status':status.HTTP_200_OK}, status=status.HTTP_200_OK)
     except Account.DoesNotExist:
         return JsonResponse({'message': 'Account does not exist','error':False,'status':status.HTTP_400_BAD_REQUEST}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -290,15 +289,17 @@ def Transactions(request):
         category = request.data.get("category")
         transaction_type = request.data.get("transaction_type")
         created_at = request.data.get("startDate")
+        updated_at = request.data.get("startDate")
 
         if not amount or not payee or not category:
             return JsonResponse({'message': 'Please fill all fields in form','error':True,'status':status.HTTP_400_BAD_REQUEST}, status=status.HTTP_400_BAD_REQUEST)
         else: 
             try:
                 account = Account.objects.get(id=account)
-                transaction = Transaction.objects.create(user=user,created_at=created_at,account=account,amount=amount,payee=payee,category=category,transaction_type=transaction_type)
+                transaction = Transaction.objects.create(user=user,created_at=created_at, updated_at=updated_at,account=account,amount=amount,payee=payee,category=category,transaction_type=transaction_type)
                 transaction.save()
-                return JsonResponse({'message': 'Transaction saved successfully','error':False,'status':status.HTTP_200_OK}, status=status.HTTP_200_OK)
+                transaction = TransactionSerializer(transaction, many=False)
+                return JsonResponse({'message': 'Transaction saved successfully','data':transaction.data ,'error':False,'status':status.HTTP_200_OK}, status=status.HTTP_200_OK)
             except Account.DoesNotExist:
                 return JsonResponse({'message': 'Account does not exist','error':False,'status':status.HTTP_400_BAD_REQUEST}, status=status.HTTP_400_BAD_REQUEST)
 
