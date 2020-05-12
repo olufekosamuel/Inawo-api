@@ -161,7 +161,7 @@ Dashboard endpoint, to get all
 @api_view(['GET'])
 @csrf_exempt
 @permission_classes((permissions.IsAuthenticated, ))
-def Dashboard2(request):
+def home(request):
     wallets = Account.objects.filter(user=request.user)
     no_of_wallet = Account.objects.filter(user=request.user).count()
     wallets = AccountSerializer(wallets,many=True)
