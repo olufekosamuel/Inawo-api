@@ -18,5 +18,5 @@ urlpatterns = [
     path('budget/create/', Budget, name='createbudget'),
     path('budget/edit/<int:budget_id>', EditBudget, name='editbudget'),
     path('budget/delete/<int:budget_id>', DeleteBudget, name='deletebudget'),
-    path('dashboard/home/', Dashboard2.as_view(), name='dashboard'),
+    path('dashboard/home/', Dashboard2, name='dashboard'),
 ]
