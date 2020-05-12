@@ -155,6 +155,146 @@ class Dashboard(APIView):
         return Response(content)
 
 
+"""
+Dashboard endpoint, to get all
+"""
+class Dashboard2(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format=None):
+        wallets = Account.objects.filter(user=request.user)
+        no_of_wallet = Account.objects.filter(user=request.user).count()
+        wallets = AccountSerializer(wallets,many=True)
+
+
+
+        year_income = {
+            'January': 0,
+            'February': 0,
+            'March': 0,
+            'April': 0,
+            'May': 0,
+            'June': 0,
+            'July': 0,
+            'August': 0,
+            'September': 0,
+            'October': 0,
+            'November': 0,
+            'December': 0,
+        }
+
+
+        year_expense = {
+            'January': 0,
+            'February': 0,
+            'March': 0,
+            'April': 0,
+            'May': 0,
+            'June': 0,
+            'July': 0,
+            'August': 0,
+            'September': 0,
+            'October': 0,
+            'November': 0,
+            'December': 0,
+        }
+
+        current_month_earn = 0
+        year_trans = Transaction.objects.filter(user=request.user,updated_at__year=datetime.now().year)
+        current_month_trans = Transaction.objects.filter(user=request.user,updated_at__year=datetime.now().year,updated_at__month=datetime.now().month)
+        
+        for trans in current_month_trans:
+            if trans.transaction_type == "income":
+                current_month_earn += int(trans.amount)
+            else:
+                current_month_earn -= int(trans.amount)
+        for trans in year_trans:
+            if trans.updated_at.month == 1:
+                if trans.transaction_type == "income":
+                    year_income['January'] += int(trans.amount)
+                else:
+                    year_expense['January'] += int(trans.amount)
+            elif trans.updated_at.month == 2:
+                if trans.transaction_type == "income":
+                    year_income['February'] += int(trans.amount)
+                else:
+                    year_expense['February'] += int(trans.amount)
+            elif trans.updated_at.month == 3:
+                if trans.transaction_type == "income":
+                    year_income['March'] += int(trans.amount)
+                else:
+                    year_expense['March'] += int(trans.amount)
+            elif trans.updated_at.month == 4:
+                if trans.transaction_type == "income":
+                    year_income['April'] += int(trans.amount)
+                else:
+                    year_expense['April'] += int(trans.amount)
+            elif trans.updated_at.month == 5:
+                if trans.transaction_type == "income":
+                    year_income['May'] += int(trans.amount)
+                else:
+                    year_expense['May'] += int(trans.amount)
+            elif trans.updated_at.month == 6:
+                if trans.transaction_type == "income":
+                    year_income['June'] += int(trans.amount)
+                else:
+                    year_expense['June'] += int(trans.amount)
+            elif trans.updated_at.month == 7:
+                if trans.transaction_type == "income":
+                    year_income['July'] += int(trans.amount)
+                else:
+                    year_expense['July'] += int(trans.amount)
+            elif trans.updated_at.month == 8:
+                if trans.transaction_type == "income":
+                    year_income['August'] += int(trans.amount)
+                else:
+                    year_expense['August'] += int(trans.amount)
+            elif trans.updated_at.month == 9:
+                if trans.transaction_type == "income":
+                    year_income['September'] += int(trans.amount)
+                else:
+                    year_expense['September'] += int(trans.amount)
+            elif trans.updated_at.month == 10:
+                if trans.transaction_type == "income":
+                    year_income['October'] += int(trans.amount)
+                else:
+                    year_expense['October'] += int(trans.amount)
+            elif trans.updated_at.month == 11:
+                if trans.transaction_type == "income":
+                    year_income['November'] += int(trans.amount)
+                else:
+                    year_expense['November'] += int(trans.amount)
+            elif trans.updated_at.month == 12:
+                if trans.transaction_type == "income":
+                    year_income['December'] += int(trans.amount)
+                else:
+                    year_expense['December'] += int(trans.amount)
+        
+        
+        year_expense = json.dumps(year_expense)
+        year_income = json.dumps(year_income)
+        trans = Transaction.objects.filter(user=request.user, updated_at__year=datetime.now().year)
+        earnings_month = 0
+        earnings_annual = 0
+        for tran in trans:
+            if tran.transaction_type == "income":
+                earnings_annual += int(tran.amount)
+            else:
+                earnings_annual -= int(tran.amount)
+
+        content = {
+            'message': 'success',
+            'error':False,
+            'wallets': wallets.data,
+            'no_of_wallet': no_of_wallet,
+            'status':status.HTTP_200_OK,
+            'annual_earnings': earnings_annual,
+            'year_income': year_income,
+            'year_expense': year_expense,
+            'current_month_earning': current_month_earn
+        }
+        return Response(content)
+
 
 """
 Get income and expense for a account in current month
