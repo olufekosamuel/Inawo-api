@@ -167,7 +167,6 @@ def home(request):
     wallets = AccountSerializer(wallets,many=True)
 
 
-
     year_income = {
         'January': 0,
         'February': 0,
@@ -293,7 +292,7 @@ def home(request):
         'year_expense': year_expense,
         'current_month_earning': current_month_earn
     }
-    return Response(content)
+    return JsonResponse(content)
 
 
 """
