@@ -8,7 +8,6 @@ from rest_framework.routers import DefaultRouter
 app_name = "home"
 
 urlpatterns = [
-    path('dashboardhome/', Dashboard2.as_view(), name='dashboard'),
     path('transaction/list/<int:account_id>', ListTransaction, name='list_transaction'),
     path('transaction/create/', Transactions, name='createtransaction'),
     path('transaction/edit/<int:transaction_id>', UpdateTransaction, name='edittransaction'),
@@ -19,4 +18,5 @@ urlpatterns = [
     path('budget/create/', Budget, name='createbudget'),
     path('budget/edit/<int:budget_id>', EditBudget, name='editbudget'),
     path('budget/delete/<int:budget_id>', DeleteBudget, name='deletebudget'),
+    path('dashboard/home/', Dashboard2.as_view(), name='dashboard'),
 ]
